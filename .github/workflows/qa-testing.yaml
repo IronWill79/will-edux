@@ -1,0 +1,24 @@
+name: Quality Assurance Testing
+on:
+  push:
+    branches: ['develop']
+  pull_request:
+    branches: ['develop']
+  workflow_dispatch:
+
+jobs:
+  'QA':
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - run: npm install --global pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm fix
+      - run: pnpm test
+      - run: pnpm build
+      - run: node dist/index.js
